@@ -15,6 +15,7 @@ parser.add_argument("-d", "--embedding_size", type=int, default=300)
 parser.add_argument("-c", "--cpu_count", type=int, default=4)
 parser.add_argument("-i", "--iters", type=int, default=2)
 parser.add_argument("-s", "--use_segment", type=int, default=0)
+parser.add_argument("-u", "--user_dictionary")
 
 args = parser.parse_args()
 if os.path.isfile(args.file_path):
@@ -34,7 +35,7 @@ gensim.models.Word2Vec.FAST_VERSION = 1
 
 # args.use_segment: 0-not use 1-use_jieba 2-use_jieba_with_ditionary`
 if args.use_segment == 2:
-    jieba.load_userdict("../medical_term_judger/dictionary/all_dictionary.txt")    
+    jieba.load_userdict(args.user_dictionary)    
 
 class Text(object):
     def __init__(self, file_path_list):
@@ -65,6 +66,6 @@ else:
     model.save(model_name)
 
 log_text = f"Job_name:Word2Vec, Use_time:{str(use_time)}, Save_path:{model_name})"
-svc = pyserver.ServerChan("https://sc.ftqq.com/SCU40533T8d2ed497f1ac4a681a08a566d986e8ac5c3c258135d4e.send")
+svc = pyserver.ServerChan()
 svc.output_to_weixin(log_text)
 

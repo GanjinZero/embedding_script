@@ -3,7 +3,7 @@ import argparse
 import os
 import time
 from pyserverchan import pyserver
-# import ipdb
+import jieba
 
 
 parser = argparse.ArgumentParser()
@@ -13,6 +13,8 @@ parser.add_argument("-w", "--window_size", type=int, default=10)
 parser.add_argument("-d", "--embedding_size", type=int, default=300)
 parser.add_argument("-c", "--cpu_count", type=int, default=4)
 parser.add_argument("-i", "--iters", type=int, default=2)
+parser.add_argument("-s", "--use_segment", type=int, default=0)
+parser.add_argument("-u", "--user_dictionary", default="")
 
 args = parser.parse_args()
 if os.path.isfile(args.file_path):
@@ -28,6 +30,10 @@ else:
 print(f"Found {len(file_path_list)} file(s) under {args.file_path}")
 start_time = time.time()
 
+# args.use_segment: 0-not use 1-use_jieba 2-use_jieba_with_ditionary`
+if args.use_segment == 2:
+    jieba.load_userdict(args.user_dictionary)
+
 class Text(object):
     def __init__(self, file_path_list):
         self.file_path_list = file_path_list
@@ -39,7 +45,10 @@ class Text(object):
             print(f"Now file name:{file_path}, now file count:{file_count}")
             with open(file_path, "r", encoding="utf-8") as f:
                 for line in f:
-                    yield list(line.strip())
+                    if args.use_segment == 0:
+                        yield list(line.strip())
+                    else:
+                        yield list(jieba.cut(line.strip()))
 
 sentences = Text(file_path_list)
 corpus_model = Corpus()
@@ -60,6 +69,6 @@ else:
     model.save(model_name)
 
 log_text = f"Job_name:Glove, Use_time:{str(use_time)}, Save_path:{model_name})"
-svc = pyserver.ServerChan("https://sc.ftqq.com/SCU40533T8d2ed497f1ac4a681a08a566d986e8ac5c3c258135d4e.send")
+svc = pyserver.ServerChan()
 svc.output_to_weixin(log_text)
 
