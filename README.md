@@ -1,5 +1,5 @@
 # embedding-script
-一个简单的在大的文档进行word2vec和glove embedding计算，统计n-gram的python脚本。
+一个简单的在大的文档进行word2vec和glove embedding计算，统计n-gram，词频的python脚本。
 
 # 使用说明
 
@@ -16,6 +16,11 @@ python train_glove.py -f ../text/ -o ./glove/ -d 300 -c 12 -i 2 -s 2 -u ./dict.t
 n-gram:
 ```shell
 python collect_ngram.py -f ../text/ -o ./ngram/ -n 3 -p 0 -e 1 -m 10
+```
+
+词频:
+```shell
+python generate_terms.py -f ../a.txt -o ./term.txt -d ./dict.txt -m 5
 ```
 
 # 参数解释

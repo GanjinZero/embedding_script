@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--file_path")
 parser.add_argument("-o", "--output_path")
 parser.add_argument("-n", "--max_n", default="3")
-parser.add_argument("-p", "--use_punc", default="1")
+parser.add_argument("-p", "--use_punc", default="0")
 parser.add_argument("-e", "--use_number_english", default="1")
 parser.add_argument("-m", "--min_freq", default="5")
 
@@ -130,7 +130,7 @@ print(f"bi_gram:{len(bi_gram)}")
 print(f"tri_gram:{len(tri_gram)}")
 print(f"quad_gram:{len(quad_gram)}")
 
-use_time = time.time()
+use_time = time.time() - start_time
 log_text = f"Job_name:n-gram, Use_time:{str(use_time)}, Save_path:{args.output_path})"
 svc = pyserver.ServerChan()
 svc.output_to_weixin(log_text)
